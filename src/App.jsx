@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useWallet from './hooks/useWallet';
 // import {ethers} from 'ethers';
 function App() {
-  const { account, balance, network, connectWallet, getBalance, switchToETHMainnet, switchToSepolia } = useWallet();
+  const { account, balance, network, connectWallet, getBalance, switchToETHMainnet, switchToSepolia, switchAccount } = useWallet();
   const [address, setAddress] = useState('');
   const [randomAddressBalance, setRandomAddressBalance] = useState('');
 
@@ -37,6 +37,7 @@ function App() {
         <section>
             <button onClick={switchToETHMainnet}>Switch to ETH Mainnet</button>
             <button onClick={switchToSepolia} className='ml-4'>Switch to Sepolia</button>
+            <button onClick={switchAccount} className='ml-4'>Switch Account</button>
           </section>
       </header>
       

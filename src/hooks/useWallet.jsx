@@ -75,6 +75,29 @@ const useWallet = () => {
     }
   }
 
+  const switchAccount = useCallback(async () => {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        setAccount(accounts[0]);
+
+        const balance = await window.ethereum.request({
+          method: 'eth_getBalance',
+          params: [accounts[0], 'latest']
+        });
+        setBalance(ethers.formatEther(balance));
+
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        setNetwork(parseInt(chainId, 16));
+      } catch (error) {
+        console.error("Error switching account:", error);
+      }
+    } else {
+      console.error("No Ethereum provider found. Install MetaMask.");
+    }
+  }, []);
+
   useEffect(() => {
     const handleAccountsChanged = async (accounts) => {
       setAccount(accounts[0]);
@@ -129,7 +152,7 @@ const useWallet = () => {
     };
   }, [account]);
 
-  return { account, balance, network, connectWallet, getBalance, switchToETHMainnet, switchToSepolia };
+  return { account, balance, network, connectWallet, getBalance, switchToETHMainnet, switchToSepolia, switchAccount };
 };
 
 export default useWallet;
